@@ -10,9 +10,14 @@ import com.akliars.kisileruygulamasi.data.entity.Kisiler
 import com.akliars.kisileruygulamasi.databinding.CardTasarimBinding
 import com.akliars.kisileruygulamasi.databinding.FragmentAnasayfaBinding
 import com.akliars.kisileruygulamasi.ui.fragment.AnasayfaFragmentDirections
+import com.akliars.kisileruygulamasi.ui.viewmodel.AnasayfaViewModel
+import com.akliars.kisileruygulamasi.utils.gecis
 import com.google.android.material.snackbar.Snackbar
 
-class KisilerAdapter(var mContext: Context,var kisilerListesi:List<Kisiler>)
+class KisilerAdapter(
+                     var mContext: Context,
+                     var kisilerListesi:List<Kisiler>,
+                     var viewModel: AnasayfaViewModel)
     : RecyclerView.Adapter<KisilerAdapter.CardTasarimTutucu>() {
     inner class CardTasarimTutucu(var tasarim:CardTasarimBinding) : RecyclerView.ViewHolder(tasarim.root)
 
@@ -30,14 +35,14 @@ class KisilerAdapter(var mContext: Context,var kisilerListesi:List<Kisiler>)
 
         t.cardViewSatir.setOnClickListener {
             val gecis = AnasayfaFragmentDirections.kisiDetayGecis(kisi=kisi)
-            Navigation.findNavController(it).navigate(gecis)
-
+          //  Navigation.findNavController(it).navigate(gecis)
+            Navigation.gecis(it,gecis)
         }
 
         t.imageViewSil.setOnClickListener{
             Snackbar.make(it,"${kisi.kisi_ad} silinsin mi?",Snackbar.LENGTH_SHORT)
                 .setAction("EVET"){
-                    sil(kisi.kisi_id)
+                    viewModel.sil(kisi.kisi_id)
                 }.show()
         }
 
@@ -47,8 +52,5 @@ class KisilerAdapter(var mContext: Context,var kisilerListesi:List<Kisiler>)
         return kisilerListesi.size
     }
 
-    fun sil(kisi_id:Int){
-        Log.e("Kişi Sil",kisi_id.toString())
-    }
 
 }
